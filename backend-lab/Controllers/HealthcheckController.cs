@@ -1,3 +1,4 @@
+using backend_lab.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend_lab.Controllers;
@@ -8,7 +9,7 @@ public class HealthcheckController : ControllerBase
     [HttpGet]
     public IActionResult GetHealthcheck ()
     {
-        return Ok("Healthcheck is working, yey!");
+        return Ok(new HealthCheckReturnInfo(ServerStatus.Healthy));
     }
 }
 
