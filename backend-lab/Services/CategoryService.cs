@@ -1,35 +1,27 @@
-using backend_lab.Models;
+using Models;
 
 namespace backend_lab.Services;
 
 public class CategoryService {
-    private readonly List<Category> _categories = new()
+    private readonly RepoPull _repoPull;
+    public CategoryService(RepoPull repoPull)
     {
-        new Category { Id = Guid.NewGuid(), Name = "Health" },
-        new Category { Id = Guid.NewGuid(), Name = "Entertainment" },
-    };
-    
-    public void AddCategory(Category category)
-    {
-        if (GetCategoryById(category.Id) is not null)
-            return;
-        _categories.Add(category);
+        _repoPull = repoPull;
     }
 
-    public Category GetCategoryById(Guid id)
+    public async Task AddCategory(Category category)
     {
-        return _categories.FirstOrDefault(c => c.Id == id);
+        await _repoPull.CategoryRepo.AddAsync(category);
+    }
+
+    public Task<Category> GetCategoryById(Guid id)
+    {
+        return _repoPull.CategoryRepo.GetByIdAsync(id);
     }
     
-    public bool DeleteCategoryById(Guid id)
+    public Task DeleteCategoryById(Guid id)
     {
-        var category = GetCategoryById(id);
-        if (category != null)
-        {
-            _categories.Remove(category);
-            return true;
-        }
-        return false;
+        return _repoPull.CategoryRepo.DeleteByIdAsync(id);
     }
 }
 

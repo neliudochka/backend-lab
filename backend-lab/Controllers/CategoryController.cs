@@ -1,6 +1,6 @@
-using backend_lab.Models;
 using backend_lab.Services;
 using Microsoft.AspNetCore.Mvc;
+using Models;
 
 namespace backend_lab.Controllers;
 
@@ -16,29 +16,38 @@ public class CategoryController : ControllerBase
 
     // POST /category
     [HttpPost("category")]
-    public ActionResult<Category> PostCategory([FromBody] string categoryName)
+    public async Task<IActionResult> PostCategory([FromBody] string categoryName)
     {
         var category = new Category { Name = categoryName, Id = Guid.NewGuid() };
-        _categoryService.AddCategory(category);
+        await _categoryService.AddCategory(category);
         return Ok(category.Id);
     }
 
     // GET /category/<category_id>
     [HttpGet("category/{id}")]
-    public ActionResult<Category> GetCategoryById(Guid id)
+    public async Task<IActionResult> GetCategoryById(Guid id)
     {
-        var category = _categoryService.GetCategoryById(id);
-        if (category != null) return Ok(category);
+        var category = await _categoryService.GetCategoryById(id);
+        if (category != null)
+        {
+            return Ok(category);
+        }
         return NotFound("No category with such id");
+
     }
 
     // DELETE /category/<category_id>
     [HttpDelete("category/{id}")]
-    public ActionResult DeleteCategoryById(Guid id)
+    public async Task<IActionResult> DeleteCategoryById(Guid id)
     {
-        var category = _categoryService.DeleteCategoryById(id);
-        if (category)
+        try
+        {
+            await _categoryService.DeleteCategoryById(id);
             return Ok("Category deleted successfully.");
-        return NotFound("Category not found.");
+        }
+        catch (NullReferenceException exception)
+        {
+            return NotFound("Category not found.");
+        }
     }
 }
