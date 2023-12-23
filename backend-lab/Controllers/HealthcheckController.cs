@@ -1,4 +1,4 @@
-using backend_lab.Entities;
+using backend_lab.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend_lab.Controllers;
