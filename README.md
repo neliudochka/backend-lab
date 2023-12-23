@@ -28,7 +28,10 @@ and run
 ``` 
 
 ## Deploy
-https://backend-lab.onrender.com  
+https://backend-lab-2-4uqc.onrender.com
 
 and link especially to /healthcheck endpoint:  
-https://backend-lab.onrender.com/healthcheck
+https://backend-lab-2-4uqc.onrender.com/healthcheck
+
+## Postman workspace
+https://www.postman.com/orbital-module-pilot-31168210/workspace/backend-lab
