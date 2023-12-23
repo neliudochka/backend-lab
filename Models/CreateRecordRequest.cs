@@ -1,4 +1,4 @@
-namespace backend_lab.Models;
+namespace Models;
 
 public class CreateRecordRequest
 {

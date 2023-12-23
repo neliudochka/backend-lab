@@ -1,14 +1,37 @@
+using backend_lab;
 using backend_lab.Services;
+using DataLayer;
+
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<UserService>();
-builder.Services.AddSingleton<CategoryService>();
-builder.Services.AddSingleton<RecordService>();
+builder.Services.AddTransient<UserService>();
+builder.Services.AddTransient<CategoryService>();
+builder.Services.AddTransient<RecordService>();
+builder.Services.AddTransient<RepoPull>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var connectionString = builder.Configuration.GetConnectionString("WebApiDatabase");
+try
+{
+    builder.Services.AddDbContext<DataContext>(options =>
+    {
+        options.UseNpgsql(connectionString,
+            sqlServerOptions => sqlServerOptions.EnableRetryOnFailure());
+    });
+
+
+    Console.WriteLine("Connected to db");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+}
+
 
 var app = builder.Build();
 

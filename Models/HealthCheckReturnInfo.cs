@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace backend_lab.Models;
+namespace Models;
 
 public class HealthCheckReturnInfo
 {
