@@ -1,35 +1,34 @@
-using backend_lab.Models;
+using Models;
 
 namespace backend_lab.Services;
 
 public class UserService
 {
-    private List<User> _users = new()
-    {
-        new User() { Id = Guid.NewGuid(), Name = "Mila"},
-        new User { Id = Guid.NewGuid(), Name = "Vika" },
-        new User { Id = Guid.NewGuid(), Name = "Svitlanka" },
-        new User { Id = Guid.NewGuid(), Name = "Vita" },
-        new User { Id = Guid.NewGuid(), Name = "Alina" }
-    };
-    
-    public IEnumerable<User> GetUsers()
-    {
-        return _users;
-    } 
+    private readonly RepoPull _repoPull;
 
-    public void AddUser(User user)
-    { 
-        if (GetUserById(user.Id) is not null)
-            return;
-        _users.Add(user);
+    public UserService(RepoPull repoPull)
+    {
+        _repoPull = repoPull;
     }
 
-    public User GetUserById(Guid id) => 
-        _users.FirstOrDefault(u => u.Id == id);
-
-    public bool DeleteUserById(Guid id)
+    public async Task<IEnumerable<User>> GetUsers()
     {
-        return _users.Remove(GetUserById(id));
+        var users = await _repoPull.UserRepo.GetAllAsync();
+        return users;
+    } 
+
+    public async Task AddUser(User user)
+    {
+        await _repoPull.UserRepo.AddAsync(user);
+    }
+
+    public Task<User> GetUserById(Guid id)
+    {
+        return _repoPull.UserRepo.GetByIdAsync(id);
+    }
+
+    public Task DeleteUserById(Guid id)
+    {
+        return _repoPull.UserRepo.DeleteByIdAsync(id);
     }
 }

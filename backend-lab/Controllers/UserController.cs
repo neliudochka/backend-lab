@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using backend_lab.Models;
+using Models;
 using backend_lab.Services;
 
 namespace backend_lab.Controllers;
@@ -17,25 +17,26 @@ public class UserController : ControllerBase
     
     //GET /users
     [HttpGet("users")]
-    public ActionResult<IEnumerable<User>> GetUsers()
+    public async Task<IActionResult> GetUsers()
     {
-        return Ok(_userService.GetUsers());
+        var users = await _userService.GetUsers();
+        return Ok(users);
     }
 
     //POST /user
     [HttpPost("user")]
-    public ActionResult<User> PostUser([FromBody] string userName)
+    public async Task<IActionResult> PostUser([FromBody] string userName)
     {
         var user = new User {Name = userName, Id = Guid.NewGuid()};
-        _userService.AddUser(user);
+        await _userService.AddUser(user);
         return Ok(user.Id);
     }
     
     //GET /user/<user_id>
     [HttpGet("user/{id}")]
-    public ActionResult<User> GetUserById(Guid id)
+    public async Task<IActionResult> GetUserById(Guid id)
     {
-        var user = _userService.GetUserById(id);
+        var user = await _userService.GetUserById(id);
         if (user != null)
         {
             return Ok(user);
@@ -45,17 +46,16 @@ public class UserController : ControllerBase
     
     // DELETE /user/<user_id>\
     [HttpDelete("user/{id}")]
-    public ActionResult DeleteUserById(Guid id)
+    public async Task<IActionResult> DeleteUserById(Guid id)
     {
-        var userToRemove = _userService.DeleteUserById(id);
-        if (userToRemove)
+        try
         {
+            await _userService.DeleteUserById(id);
             return Ok("User deleted successfully.");
         }
-        else
+        catch (NullReferenceException exception)
         {
             return NotFound("User not found.");
         }
-        
     }
 }
