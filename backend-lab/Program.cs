@@ -4,6 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<UserService>();
 builder.Services.AddSingleton<CategoryService>();
+builder.Services.AddSingleton<RecordService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
