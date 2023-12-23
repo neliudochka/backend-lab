@@ -1,43 +1,40 @@
-using backend_lab.Models;
+using Models;
 
 namespace backend_lab.Services;
 
 public class RecordService {
-    private readonly List<Record> _records = new()
-    {};
-    
-    public Record GetRecordById(Guid id)
+    private readonly RepoPull _repoPull;
+    public RecordService(RepoPull repoPull)
     {
-        return _records.FirstOrDefault(c => c.Id == id);
+        _repoPull = repoPull;
+    }
+
+    public Task<Record> GetRecordById(Guid id)
+    {
+        return _repoPull.RecordRepo.GetByIdAsync(id);
     }
     
-    public bool DeleteRecordById(Guid id)
+    public Task DeleteRecordById(Guid id)
     {
-        var record = GetRecordById(id);
-        if (record != null)
-        {
-            _records.Remove(record);
-            return true;
-        }
-        return false;
+        return _repoPull.RecordRepo.DeleteByIdAsync(id);
     }
     
     //POST /record
-    public void AddRecord(Record record)
+    public async Task AddRecord(Record record)
     {
-        if (GetRecordById(record.Id) is not null)
-            return;
-        _records.Add(record);
+        await _repoPull.RecordRepo.AddAsync(record);
     }
     
     //GET /record 
-    public IEnumerable<Record> GetRecords(RecordRequest request)
+    public async Task<IEnumerable<Record>> GetRecords(RecordRequest request)
     {
+        var records = await _repoPull.RecordRepo.GetAllAsync();
+        
         if (request.userId is null)
-            return _records.Where(i => i.CategoryId == request.categoryId);
+            return records.Where(i => i.CategoryId == request.categoryId);
         if (request.categoryId is null)
-            return _records.Where(i => i.UserId == request.userId);
-        return _records.Where(i => i.CategoryId == request.categoryId)
+            return records.Where(i => i.UserId == request.userId);
+        return records.Where(i => i.CategoryId == request.categoryId)
             .Where(i => i.UserId == request.userId);
     }
 

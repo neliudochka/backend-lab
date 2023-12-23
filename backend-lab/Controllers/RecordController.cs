@@ -1,4 +1,4 @@
-using backend_lab.Models;
+using Models;
 using backend_lab.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,33 +16,38 @@ public class RecordsController : ControllerBase
     
     //get by id
     [HttpGet("record/{id}")]
-    public IActionResult GetRecordById(Guid id)
+    public async Task<IActionResult> GetRecordById(Guid id)
     {
-        var record = _recordService.GetRecordById(id);
-        if (record != null) return Ok(record);
-        return NotFound("No category with such id");
+        var record = await _recordService.GetRecordById(id);
+        if (record != null) 
+            return Ok(record);
+        return NotFound("No record with such id");
     }
 
     //delete 
     [HttpDelete("record/{id}")]
-    public IActionResult DeleteRecordById(Guid id)
+    public async Task<IActionResult> DeleteRecordById(Guid id)
     {
-        var record = _recordService.DeleteRecordById(id);
-        if (record)
-            return Ok("Category deleted successfully.");
-        return NotFound("Category not found.");
+        try
+        {
+            await _recordService.DeleteRecordById(id);
+            return Ok("Record deleted successfully.");
+        }
+        catch (NullReferenceException exception)
+        {
+            return NotFound("Record not found.");
+        }
     }
 
     //post
     [HttpPost("record")]
-    public IActionResult PostRecord([FromBody]CreateRecordRequest request)
+    public async Task<IActionResult> PostRecord([FromBody]CreateRecordRequest request)
     {
         var id = Guid.NewGuid();
-        _recordService.AddRecord(new Record(
+        await _recordService.AddRecord(new Record(
             id,
             request.UserId,
             request.CategoryId,
-            DateTime.Now, 
             request.MoneySpent));
         return Ok(id);
     }
@@ -50,11 +55,11 @@ public class RecordsController : ControllerBase
     
     //get by user/cat
     [HttpGet("record")]
-    public IActionResult GetByUserOrAndCategory([FromQuery] RecordRequest request)
+    public async Task<IActionResult> GetByUserOrAndCategory([FromQuery] RecordRequest request)
     {
         if (request.categoryId is null && request.userId is null)
             return BadRequest("No such category and user in request!!1");
-        var record = _recordService.GetRecords(request);
+        var record = await _recordService.GetRecords(request);
         return Ok(record);
     }
     
