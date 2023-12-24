@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using backend_lab.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend_lab.Controllers;
 
-
+[Authorize]
 [ApiController]
 public class UserController : ControllerBase
 {

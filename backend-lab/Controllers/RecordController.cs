@@ -1,9 +1,11 @@
 using Models;
 using backend_lab.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend_lab.Controllers;
 
+[Authorize]
 [ApiController]
 public class RecordsController : ControllerBase
 {
