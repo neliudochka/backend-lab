@@ -34,11 +34,11 @@ and run
  docker-compose up
 ``` 
 
-## Deploy
-https://backend-lab-3-gecg.onrender.com
-
-and link especially to /healthcheck endpoint:
-https://backend-lab-3-gecg.onrender.com/healthcheck
+## Deploy  
+https://backend-lab-4-j6bc.onrender.com  
+  
+and link especially to /healthcheck endpoint:  
+https://backend-lab-4-j6bc.onrender.com/healthcheck
 
 ## Postman workspace
 https://www.postman.com/orbital-module-pilot-31168210/workspace/backend-lab
