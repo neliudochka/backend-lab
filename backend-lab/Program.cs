@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<CategoryService>();
 builder.Services.AddTransient<RecordService>();
+builder.Services.AddTransient<AccountService>();
 builder.Services.AddTransient<RepoPull>();
 
 builder.Services.AddControllers();

@@ -9,4 +9,6 @@ public class User : BaseModel
     public string Name { get; set; }
     [JsonIgnore]
     public virtual ICollection<Record>? Records { get; set; }
+    [JsonIgnore]
+    public virtual Account? Account { get; set; }
 }

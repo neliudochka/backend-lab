@@ -8,6 +8,7 @@ public class DataContext: DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Record> Records { get; set; }        
+    public DbSet<Account> Accounts { get; set; }
 
     public DataContext(DbContextOptions<DataContext> options) 
         : base(options) {}
@@ -31,5 +32,15 @@ public class DataContext: DbContext
             .WithMany(c => c.Records)
             .HasForeignKey(r => r.CategoryId)
             .OnDelete(DeleteBehavior.SetNull);
+        
+        //account
+        modelBuilder.Entity<Account>()
+            .HasKey(acc => acc.Id);
+        
+        modelBuilder.Entity<User>()
+            .HasOne<Account>(u => u.Account)
+            .WithOne(r => r.User)
+            .HasForeignKey<Account>(acc => acc.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

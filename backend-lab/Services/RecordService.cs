@@ -4,9 +4,12 @@ namespace backend_lab.Services;
 
 public class RecordService {
     private readonly RepoPull _repoPull;
-    public RecordService(RepoPull repoPull)
+    private readonly AccountService _accountService;
+
+    public RecordService(RepoPull repoPull, AccountService accountService)
     {
         _repoPull = repoPull;
+        _accountService = accountService;
     }
 
     public Task<Record> GetRecordById(Guid id)
@@ -22,6 +25,7 @@ public class RecordService {
     //POST /record
     public async Task AddRecord(Record record)
     {
+        await _accountService.TopDownAccount(record.UserId, record.MoneySpent);
         await _repoPull.RecordRepo.AddAsync(record);
     }
     
