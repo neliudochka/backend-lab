@@ -18,9 +18,17 @@ public class RecordsController : ControllerBase
     [HttpGet("record/{id}")]
     public async Task<IActionResult> GetRecordById(Guid id)
     {
-        var record = await _recordService.GetRecordById(id);
-        if (record != null) 
-            return Ok(record);
+        try
+        {
+            var record = await _recordService.GetRecordById(id);
+            if (record != null) 
+                return Ok(record);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(e.Message);
+        }
         return NotFound("No record with such id");
     }
 
@@ -43,13 +51,20 @@ public class RecordsController : ControllerBase
     [HttpPost("record")]
     public async Task<IActionResult> PostRecord([FromBody]CreateRecordRequest request)
     {
-        var id = Guid.NewGuid();
-        await _recordService.AddRecord(new Record(
-            id,
-            request.UserId,
-            request.CategoryId,
-            request.MoneySpent));
-        return Ok(id);
+        try
+        {
+            var id = Guid.NewGuid();
+            await _recordService.AddRecord(new Record(
+                id,
+                request.UserId,
+                request.CategoryId,
+                request.MoneySpent));
+            return Ok(id);
+        }  catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(e.Message);
+        }
     }
     
     
@@ -57,10 +72,17 @@ public class RecordsController : ControllerBase
     [HttpGet("record")]
     public async Task<IActionResult> GetByUserOrAndCategory([FromQuery] RecordRequest request)
     {
-        if (request.categoryId is null && request.userId is null)
-            return BadRequest("No such category and user in request!!1");
-        var record = await _recordService.GetRecords(request);
-        return Ok(record);
+        try
+        {
+            if (request.categoryId is null && request.userId is null)
+                return BadRequest("No such category and user in request!!1");
+            var record = await _recordService.GetRecords(request);
+            return Ok(record);
+        } catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(e.Message);
+        }
     }
     
     

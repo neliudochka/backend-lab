@@ -18,21 +18,35 @@ public class CategoryController : ControllerBase
     [HttpPost("category")]
     public async Task<IActionResult> PostCategory([FromBody] string categoryName)
     {
-        var category = new Category { Name = categoryName, Id = Guid.NewGuid() };
-        await _categoryService.AddCategory(category);
-        return Ok(category.Id);
+        try
+        {
+            var category = new Category { Name = categoryName, Id = Guid.NewGuid() };
+            await _categoryService.AddCategory(category);
+            return Ok(category.Id);
+            
+        } catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(e.Message);
+        }
     }
 
     // GET /category/<category_id>
     [HttpGet("category/{id}")]
     public async Task<IActionResult> GetCategoryById(Guid id)
     {
-        var category = await _categoryService.GetCategoryById(id);
-        if (category != null)
+        try
         {
-            return Ok(category);
+            var category = await _categoryService.GetCategoryById(id);
+            if (category != null)
+                return Ok(category);
         }
-        return NotFound("No category with such id");
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(e.Message);
+        }
+        return NotFound("Category not found.");
 
     }
 
@@ -45,9 +59,10 @@ public class CategoryController : ControllerBase
             await _categoryService.DeleteCategoryById(id);
             return Ok("Category deleted successfully.");
         }
-        catch (NullReferenceException exception)
+        catch (Exception e)
         {
-            return NotFound("Category not found.");
+            Console.WriteLine(e);
+            return BadRequest(e.Message);
         }
     }
 }

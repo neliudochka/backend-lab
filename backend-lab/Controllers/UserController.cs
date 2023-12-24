@@ -19,29 +19,49 @@ public class UserController : ControllerBase
     [HttpGet("users")]
     public async Task<IActionResult> GetUsers()
     {
-        var users = await _userService.GetUsers();
-        return Ok(users);
+        try
+        {
+            var users = await _userService.GetUsers();
+            return Ok(users);
+
+        } catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(e.Message);
+        }
     }
 
     //POST /user
     [HttpPost("user")]
     public async Task<IActionResult> PostUser([FromBody] string userName)
     {
-        var user = new User {Name = userName, Id = Guid.NewGuid()};
-        await _userService.AddUser(user);
-        return Ok(user.Id);
+        try
+        {
+            var user = new User { Name = userName, Id = Guid.NewGuid() };
+            await _userService.AddUser(user);
+            return Ok(user.Id);
+        } catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(e.Message);
+        }
     }
     
     //GET /user/<user_id>
     [HttpGet("user/{id}")]
     public async Task<IActionResult> GetUserById(Guid id)
     {
-        var user = await _userService.GetUserById(id);
-        if (user != null)
+        try
         {
-            return Ok(user);
+            var user = await _userService.GetUserById(id);
+            if (user != null)
+                return Ok(user);
+            return NotFound("No user with such id");
+        }  catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(e.Message);
         }
-        return NotFound("No user with such id");
     }
     
     // DELETE /user/<user_id>\

@@ -19,8 +19,16 @@ public class AccountController : ControllerBase
     [HttpPost("account")]
     public async Task<IActionResult> AddAccount([FromBody]Guid userId)
     {
+        try
+        {
             await _accountService.AddAccount(userId);
             return Ok();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return BadRequest(ex.Message);
+        }
     }
     
     [HttpGet("account/{userId}")]
@@ -33,7 +41,7 @@ public class AccountController : ControllerBase
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return BadRequest();
+            return BadRequest(e.Message);
         }
     }
     
@@ -50,7 +58,7 @@ public class AccountController : ControllerBase
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return BadRequest();
+            return BadRequest(e.Message);
         }
     }
     
@@ -65,7 +73,7 @@ public class AccountController : ControllerBase
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return BadRequest();
+            return BadRequest(e.Message);
         }
     }
 }
