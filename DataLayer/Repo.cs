@@ -34,9 +34,22 @@ public class Repo<T> where T : BaseModel
     public async Task<T> DeleteByIdAsync(Guid id)
     {
         var model = await GetByIdAsync(id);
-        Context.Set<T>().Remove(model);
-        await SaveAsync();
-        return model;
+        if (model != null)
+        {
+            Context.Set<T>().Remove(model);
+
+            if (typeof(T) == typeof(User))
+            {
+                await SaveAsync();
+            }
+            else
+            {
+                await Context.SaveChangesAsync();
+            }
+
+            return model;
+        }
+        return null;
     }
 
     public Task<List<T>> GetAllAsync()
