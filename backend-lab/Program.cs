@@ -16,7 +16,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration.GetConnectionString("WebApiDatabase");
+var connectionString =  Environment.GetEnvironmentVariable("CONNECTION_STRING");
+Console.WriteLine("con");
+Console.WriteLine(connectionString);
 try
 {
     builder.Services.AddDbContext<DataContext>(options =>
