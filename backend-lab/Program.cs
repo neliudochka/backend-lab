@@ -9,8 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
+var key = Environment.GetEnvironmentVariable("KEY");
+Console.WriteLine(key);
 builder.Services.AddAuthorization(x =>
 {
     x.DefaultPolicy = new AuthorizationPolicyBuilder(
@@ -31,7 +31,7 @@ builder.Services.AddAuthentication(x =>
         ValidateLifetime = false,
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"])),
+            Encoding.UTF8.GetBytes(key)),
     };
 });
 
@@ -45,7 +45,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration.GetConnectionString("WebApiDatabase");
+var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+Console.WriteLine(connectionString);
+
 try
 {
     builder.Services.AddDbContext<DataContext>(options =>
